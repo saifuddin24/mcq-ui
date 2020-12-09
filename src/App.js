@@ -43,7 +43,7 @@ function App() {
                 <Route path = "/about">Profile</Route>
                 <Route path = "/quizzes">Quiz List</Route>
                 <Route path = "/subjects">Subjects</Route>
-                <Route path = "/settings">Subjects</Route>
+                <Route path = "/settings">Settings</Route>
                 <Route path = "/profile">Profile</Route>
                 <Route path = "/contact">Contact</Route>
             </Switch>
