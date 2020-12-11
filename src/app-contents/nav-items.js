@@ -1,7 +1,10 @@
+import {Homepage} from "../pages";
+
 export default [
     {
         title: 'Home',
         link: '/',
+        component: Homepage,
         options: {exact: true},
         parents: []
     },
