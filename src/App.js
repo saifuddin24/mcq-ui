@@ -8,13 +8,16 @@ import {init} from "./helpers/dom";
 
 
 function App() {
+
+    const [ loadCounter, setLoadCounter ] = useState( false);
+
     useEffect( () => {
         init();
     });
 
   return (
     <div className="App">
-        <Router>
+        <Router basename={window.ROUTER_BASE || ''} >
             <Header/>
             <Switch>
 
@@ -34,8 +37,8 @@ function App() {
                 </Route>
 
                 <Route path = "/quizzes">
-                    <PageHeader>Quiz List</PageHeader>
-                    <PageContent><QuizList/></PageContent>
+                    <PageHeader>Quiz List <button onClick={() => setLoadCounter( loadCounter + 1 )}>Reload</button></PageHeader>
+                    <PageContent><QuizList reload={loadCounter} /></PageContent>
                 </Route>
 
                 <Route path = "/subjects">
@@ -62,12 +65,13 @@ function App() {
   );
 }
 
+
 function PageContent({children}) {
-    return <main className='bg-gray-100'>
+    return <main className='bg-blue-100'>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
 
             <div className="px-4 py-6 sm:px-0">
-                <div className="border-4 border-dashed border-gray-200 rounded-lg h-96">
+                <div className="">
                     {children}
                 </div>
             </div>

@@ -171878,11 +171878,4 @@ video {
   }
 }
 
-body {
-    height: 100vh;
-}
-
-[data-hidden="true"] {
-    display: none !important;
-}
 
