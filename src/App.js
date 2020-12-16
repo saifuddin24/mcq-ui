@@ -51,13 +51,19 @@ function App() {
                 </Route>
 
                 <Route path = "/profile">
-                    <PageHeader>Settings</PageHeader>
-                    <PageContent><Settings/></PageContent>
+                    <PageHeader>Profile</PageHeader>
+                    <PageContent><Profile/></PageContent>
                 </Route>
                 <Route path = "/user">
                     <PageHeader>Contact Us</PageHeader>
-                    <PageContent><Settings/></PageContent>
+                    <PageContent><Contact/></PageContent>
                 </Route>
+
+                <Route path = "/login">
+                    {/*<PageHeader center>Login</PageHeader>*/}
+                    <PageContent><Login/></PageContent>
+                </Route>
+
             </Switch>
         </Router>
 
@@ -80,8 +86,10 @@ function PageContent({children}) {
     </main>
 }
 
-function PageHeader({children}) {
-    return <header className="bg-white shadow">
+function PageHeader({children, center}) {
+    console.log(  'center',center)
+    var  cen = center === true ?  'text-center': '';
+    return <header className={ 'bg-white shadow ' + cen }>
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold leading-tight text-gray-900">
                 {children}
