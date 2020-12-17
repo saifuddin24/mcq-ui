@@ -64,6 +64,11 @@ function App() {
                     <PageContent><Login/></PageContent>
                 </Route>
 
+                <Route path = "/registration">
+                    {/*<PageHeader center>Login</PageHeader>*/}
+                    <PageContent><Registration/></PageContent>
+                </Route>
+
             </Switch>
         </Router>
 

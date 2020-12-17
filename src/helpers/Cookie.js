@@ -8,7 +8,7 @@ export default {
         localStorage.removeItem( TOKEN_KEY );
     },
     getToken: function() {
-        localStorage.getItem( TOKEN_KEY );
+        return localStorage.getItem( TOKEN_KEY );
     },
     isLoggedIn(){
         var token = localStorage.getItem( TOKEN_KEY ) || '';

@@ -66,8 +66,8 @@ export default () => {
             .then( ( {data} ) => {
                 setMessage( data.message+ ' Redirecting...' );
                 setSuccess( true );
-                Cookie.login( data.token )
                 resetErrs();
+                Cookie.login( data.access_token );
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 2000)

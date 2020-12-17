@@ -50,7 +50,8 @@ export default ({reload}) => {
 
     useEffect( () => {
         // loading = true;
-        Quiz.get( params ).then(result => {
+        Quiz.get( params )
+        .then(result => {
             setItems( result.data.items );
 
             const meta = result.data.meta;
@@ -60,7 +61,8 @@ export default ({reload}) => {
             loading = false;
             console.log( result );
         })
-    }, [ loading, params, reload ] )
+
+    }, [ loading, params, reload ] );
 
 
     //setParams({ page_size: 4, page: 1 });
