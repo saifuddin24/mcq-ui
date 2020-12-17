@@ -2,8 +2,12 @@ import navs from '../app-contents/nav-items.js';
 import {  Link, NavLink } from "react-router-dom";
 import React from "react";
 import Cookie from "../helpers/Cookie";
+import db, {User} from "../helpers/db";
 
 export default () => {
+
+
+
 
 
     function UserArea() {
@@ -22,10 +26,18 @@ export default () => {
                 < UserMenu />
             </div>
         }else {
-            return  <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <NavLink className='block px-3 py-2 rounded-md text-base font-medium hover:text-white hover:bg-gray-700'
-                         activeClassName='bg-green-900 text-green-100'
-                         to='/login'>Login</NavLink>
+            return <div className='flex'>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    <NavLink className='block px-3 py-2 rounded-md text-base font-medium hover:text-white hover:bg-gray-700'
+                             activeClassName='bg-green-900 text-green-100'
+                             to='/login'>Login</NavLink>
+                </div>
+
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    <NavLink className='block px-3 py-2 rounded-md text-base font-medium hover:text-white hover:bg-gray-700'
+                             activeClassName='bg-green-900 text-green-100'
+                             to='/registration'>Registration</NavLink>
+                </div>
             </div>
         }
 
@@ -82,6 +94,23 @@ function NavItem({children, link, options}){
 
 function UserMenu(){
 
+    function  onLogoutClick(e){
+
+        e.preventDefault();
+        User.logout( )
+            .then( ({data}) => {
+                console.log( data );
+                Cookie.logout();
+                setTimeout(function () {
+                    window.location.href = '/';
+                }, 500)
+            })
+            .catch( ({response}) => {
+                console.log( response );
+            })
+
+    }
+
     return <div className="ml-3 relative">
         <div>
 
@@ -100,7 +129,7 @@ function UserMenu(){
              aria-labelledby="user-menu">
             <NavLink to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</NavLink>
             <NavLink to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</NavLink>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+            <a href="" onClick={onLogoutClick} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
         </div>
 
     </div>

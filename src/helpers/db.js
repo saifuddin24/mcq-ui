@@ -30,11 +30,23 @@ class Quiz {
 
 class User {
     static get(params){
-        return db.post( '/user', { params } );
+        return db.get( '/user', { params } );
     }
 
     static submit_login_data( data ){
         return db.post( '/user/login', data )
+    }
+
+    static registration_data( name ){
+        return db.get( '/user/registration-data/' + name  )
+    }
+
+    static submit_registration_data( data ){
+        return db.post( '/user/create', data )
+    }
+
+    static logout(){
+        return db.post( '/user/logout' );
     }
 }
 
