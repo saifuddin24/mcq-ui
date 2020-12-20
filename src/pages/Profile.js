@@ -12,13 +12,31 @@ export default () => {
     const [ form_values, setFormValues ] = useState( {} );
     const [ editing, setEditing ] = useState( false );
     const [ errors, setErrors ] = useState( { } );
+    const [ btn, setBtn ] = useState( { disabled: false, label: 'Save' } );
+
+    function setFormData( data ){
+        console.log( 'form_values_))', data );
+        let c = {};
+
+        c.first_name = data.first_name;
+        c.last_name = data.last_name;
+        c.email = data.email;
+        c.phone_number = data.phone_number;
+
+        setFormValues( c );
+
+        console.log( 'form_values_))', c );
+
+    }
 
     useEffect(function () {
+        setData( {} );
         User.get()
             .then( ({data}) => {
-                loading = false;
                 setData( data.data );
-                setFormValues( data.data );
+                setFormData( data.data )
+
+                loading = false;
                 console.log( data.data );
                 console.log( 'pp', Object.keys( userdata ) );
             })
@@ -29,6 +47,11 @@ export default () => {
     }, [ loading ]);
 
     function submit_editing_form() {
+        setBtn({ disabled: true, label: 'Saving...' });
+
+        // console.log( form_values );
+
+
         User.submit_editing_data( form_values )
             .then( ({data}) => {
                 console.log( data );
@@ -43,9 +66,9 @@ export default () => {
                 setErrors( response.data.errors );
                 setMessage({text: response.data.message, type: 'warning'})
                 setTimeout( () => setMessage({text: '', type: 'success'}), 5000 )
-            });
+            }).finally(() => setBtn({ disabled: false, label: 'Save' }) );
     }
-    
+
 
     function PasswordChange() {
         return <div>
@@ -62,12 +85,12 @@ export default () => {
                 return <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                     <InputField type='text'
                             onChange={ e => { setFormValues( _values( form_values, e ) ) } }
-                            defaultValue={userdata[field]} name={field} />
+                            defaultValue={form_values[field]} name={field} />
                     <FieldError errors={errors} field={field}/>
                 </dd>
             }
 
-            return <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            return <dd className="mt-3 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {( (userdata[field] == null ? <span className='text-italic text-gray-400'>(Empty)</span>
                     : userdata[field])) }
             </dd>
@@ -76,7 +99,7 @@ export default () => {
 
     function ProfileItem({field, label}){
 
-        return <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        return <div className="bg-gray-50 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-500">
                 {label}
             </dt>
@@ -88,14 +111,23 @@ export default () => {
     function ButtonContainer() {
         if(editing) {
             return <div className='flex'>
-                <Button onClick={ () => { submit_editing_form( ) }} variant={'info'}>Save</Button>
+                <Button disabled={btn.disabled} onClick={ () => { submit_editing_form( ) }} variant={'info'}>
+                    {btn.label || 'Save'}
+                </Button>
                 <Button className='ml-2'
-                        onClick={() => { setEditing( false );}}
+                        onClick={() => {
+
+                            console.log( userdata );
+
+                            setErrors( {} );
+                            setFormData( userdata );
+                            setEditing( false );
+                        }}
                         variant='outline-danger'
                 >Cancel</Button>
             </div>
         }
-        return <Button onClick={() => { setEditing( true )}}>Edit</Button>
+        return <Button onClick={() => {  setEditing( true );   }}>Edit</Button>
     }
 
     return <div className="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -110,7 +142,7 @@ export default () => {
                 <ButtonContainer/>
             </div>
         </div>
-        <div className="border-t border-gray-200 p-4">
+        <div className="border-t border-gray-200 p-5 sm:px-6">
             <Alert variant={message.type} >{message.text}</Alert>
             <dl>
                 <ProfileItem field='first_name' label='First Name' />
