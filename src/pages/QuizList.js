@@ -1,41 +1,6 @@
 import {Quiz} from '../helpers/db';
 import {useEffect, useState} from "react";
-
-function Button( props ) {
-
-    function sizeClass() {
-        switch ( props.size ) {
-            case 'xs': return ' px-2 py-1 ';
-            case 'sm': return ' px-3 py-2 ';
-            case 'x': return ' px-4 py-1 ';
-            case 'xl': return ' px-5 py-3 ';
-            case 'xxl': return ' px-6 py-4 ';
-            default: return ' px-4 py-2 '
-        }
-    }
-
-    function colorsClass() {
-
-        if( props.disabled || props.disabled === true || props.disabled === 'true' ) {
-            return 'bg-gray-300 text-gray-400 cursor-default';
-        }
-
-        switch ( props.variant ) {
-            case 'success': return ' bg-green-300 hover:bg-green-400 text-indigo-600 hover:text-indigo-900';
-            case 'info': return '  bg-blue-400 hover:bg-blue-500 text-indigo-900 hover:text-indigo-900';
-            case 'warning': return ' bg-red-600 hover:bg-red-700 text-indigo-600 hover:text-indigo-900';
-            case 'danger': return ' bg-yellow-400 hover:bg-yellow-500 text-indigo-600 hover:text-indigo-900';
-            default: return ' bg-green-300 hover:bg-green-400 text-indigo-600 hover:text-indigo-900'
-        }
-    }
-
-    var attrs = {};
-
-    Object.keys( props ).map( key => (key != 'className') ? attrs[key] = props[key]:null );
-    attrs.className =  'outline-none ' + colorsClass() + sizeClass() + props.className;
-
-    return <button {...attrs}>{props.children}</button>
-}
+import {Button} from "../components/ui";
 
 export default ({reload}) => {
 
@@ -106,8 +71,8 @@ export default ({reload}) => {
                 Admin
             </td>
             <td className="px-6 py-4 pb-10 md:pb-6 flex text-center md:table-cell whitespace-nowrap">
-                <Button className='mr-2 text-sm md:py-3' size={'sm'}>Learn More</Button>
-                <Button className='ml-2 text-sm md:py-3' size={'sm'} variant='info'>Participate</Button>
+                <Button className='mr-2 text-sm md:py-3 md:px-4' size={'sm'} variant='outline-success'>Learn More</Button>
+                <Button className='ml-2 text-sm md:py-3 md:px-4' size={'sm'} variant='info'>Participate</Button>
             </td>
         </tr>
     }
