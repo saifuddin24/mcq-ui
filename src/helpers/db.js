@@ -44,8 +44,13 @@ class User {
     static submit_registration_data( data ){
         return db.post( '/user/create', data )
     }
+
     static submit_editing_data( data ){
         return db.put( '/user/edit', data )
+    }
+
+    static submit_change_pass_data( data ){
+        return db.patch( 'user/password/change', data )
     }
 
     static logout(){

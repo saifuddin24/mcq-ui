@@ -71,9 +71,17 @@ export default () => {
 
 
     function PasswordChange() {
+        const [showForm, setShowForm] = useState(false);
+
+        if( showForm )
+
+            return <ChangePassword onCancel={() => { setShowForm(false)}}></ChangePassword>
+
         return <div>
             <span className='text-italic text-red-300'>(Secret)</span>
-            <Button className='ml-2' size='xs' variant='outline-warning'>Change</Button>
+            <Button className='ml-2' size='xs'
+                    onClick={ (  ) => { setShowForm(true ) } }
+                    variant='outline-warning'>Change</Button>
         </div>
     }
 
@@ -157,4 +165,90 @@ export default () => {
 
 
     </div>
+}
+
+
+function ChangePassword({onCancel}) {
+    const [ data, setData ] = useState({ old_password : "", password: "", password_confirmation: ""})
+    const [ errors, setErrors ] = useState({ } );
+
+    const [ message, setMessage ] = useState( {text:'', type: 'success' } );
+    const [ editing, setEditing ] = useState( false );
+    const [ btn, setBtn ] = useState( { disabled: false, label: 'Save' } );
+
+    var timeoutID = 0;
+
+    function submitChangePassswordForm() {
+        setBtn( { disabled: true, label: 'Saving...' } );
+        var timeout = 2000;
+        clearTimeout( timeoutID );
+        User.submit_change_pass_data( data)
+            .then( ({data}) => {
+                console.log( data );
+                setData( data.data );
+                setEditing( false );
+                setMessage({text: data.message, type: 'success'})
+                setTimeout( () => setMessage({text: '', type: 'success'}), 2000 )
+
+            }).catch( ({response}) => {
+                timeout = 10000;
+                setErrors( response.data.errors );
+                setMessage({text: response.data.message, type: 'warning'})
+            }).finally(( ) => {
+                setBtn( { disabled: false, label: 'Save' } );
+                if( timeout === 2000 )
+                    setErrors({});
+
+                timeoutID = setTimeout( ( ) => {
+                    if( typeof onCancel =='function' && timeout === 2000 ) {
+                        setData( { old_password : "", password: "", password_confirmation: ""} );
+                        onCancel( );
+                    }
+                    setMessage({text: '', type: 'success'});
+                }, timeout)
+                setBtn({ disabled: false, label: 'Save' })
+            });
+
+    }
+
+
+    return <div className='flex flex-col flex-grow w-full' >
+        <div className='w-full flex'>
+            <h2 className='font-bold text-gray-900 text-xl flex-grow'>Change Password</h2>
+            <div>
+                <Button
+                    disabled={btn.disabled}
+                    variant='success'
+                    onClick={() => { submitChangePassswordForm() } }>{btn.label}</Button>
+                <Button
+                    className='ml-2'
+                    variant='outline-danger'
+                    onClick={() => { if( typeof onCancel =='function') onCancel(); } }>Cancel</Button>
+            </div>
+        </div>
+        <Alert className='my-3' variant={message.type}>{message.text}</Alert>
+
+        <div className='flex flex-col my-4 w-full'>
+            <label className='text-gray-700'>Current Password</label>
+            <InputField type='text' name='old_password'
+                        onChange={ e => { setData( _values( data, e ) ) } } />
+            <FieldError errors={errors} field='old_password'/>
+        </div>
+
+        <div className='flex flex-col my-4 w-full'>
+            <label className='text-gray-700'>New Password</label>
+            <InputField type='text' name='password'
+                        onChange={ e => { setData( _values( data, e ) ) } } />
+            <FieldError errors={errors} field='password'/>
+        </div>
+
+        <div className='flex flex-col my-4 w-full'>
+            <label className='text-gray-700'>Confirm New Password</label>
+            <InputField type='text' name='password_confirmation'
+                        onChange={ e => { setData( _values( data, e ) ) } } />
+            <FieldError errors={errors} field='password_confirmation'/>
+        </div>
+
+    </div>
+
 }

@@ -69,7 +69,7 @@ function FieldError({errors, field}) {
 }
 
 
-function  Alert({variant, children }){
+function  Alert({variant, children, className }){
     const [ expired, setExpired ] = useState( 0 );
 
     function getVariant() {
@@ -88,7 +88,7 @@ function  Alert({variant, children }){
 
 
      if( children ) {
-         return <p className={'text-center mt-2 shadow-sm '+ getVariant() + ' py-2 px-1'}>
+         return <p className={'text-center mt-2 shadow-sm '+ getVariant() + ' py-2 px-1 ' + className}>
              {children}
          </p>
      }
