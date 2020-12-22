@@ -44,7 +44,7 @@ export default () => {
                 console.log(response);
             })
 
-    }, [ loading ]);
+    }, [ loading ] );
 
     function submit_editing_form() {
         setBtn({ disabled: true, label: 'Saving...' });
@@ -107,7 +107,7 @@ export default () => {
 
     function ProfileItem({field, label}){
 
-        return <div className="bg-gray-50 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
+        return <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-sm font-medium text-gray-500">
                 {label}
             </dt>
@@ -150,7 +150,7 @@ export default () => {
                 <ButtonContainer/>
             </div>
         </div>
-        <div className="border-t border-gray-200 p-5 sm:px-6">
+        <div className="bg-gray-50 border-t border-gray-200 p-5 sm:px-6">
             <Alert variant={message.type} >{message.text}</Alert>
             <dl>
                 <ProfileItem field='first_name' label='First Name' />
@@ -230,21 +230,21 @@ function ChangePassword({onCancel}) {
 
         <div className='flex flex-col my-4 w-full'>
             <label className='text-gray-700'>Current Password</label>
-            <InputField type='text' name='old_password'
+            <InputField type='password' name='old_password'
                         onChange={ e => { setData( _values( data, e ) ) } } />
             <FieldError errors={errors} field='old_password'/>
         </div>
 
         <div className='flex flex-col my-4 w-full'>
             <label className='text-gray-700'>New Password</label>
-            <InputField type='text' name='password'
+            <InputField type='password' name='password'
                         onChange={ e => { setData( _values( data, e ) ) } } />
             <FieldError errors={errors} field='password'/>
         </div>
 
         <div className='flex flex-col my-4 w-full'>
             <label className='text-gray-700'>Confirm New Password</label>
-            <InputField type='text' name='password_confirmation'
+            <InputField type='password' name='password_confirmation'
                         onChange={ e => { setData( _values( data, e ) ) } } />
             <FieldError errors={errors} field='password_confirmation'/>
         </div>

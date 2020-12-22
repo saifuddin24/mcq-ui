@@ -1,6 +1,8 @@
 import {useState,useEffect} from "react";
 import { User} from "../helpers/db";
 import Cookie from "../helpers/Cookie";
+import {  useHistory } from "react-router-dom";
+
 function SubmitButton( props ) {
 
     let color = props.disabled ? ' text-gray-500 bg-gray-300 '
@@ -20,12 +22,12 @@ function SubmitButton( props ) {
 
     </button>
 }
-
 const CREATE_USER_LABEL = 'Create User';
 const CREATE_USER_LABEL_CREATING = 'Creating...';
 
-export default () => {
-
+export default ({onLoginSuccess, onRegistrationFailed, onLoginBtnClick, title, logo, returnTo}) => {
+    returnTo = returnTo || '/';
+    let history = useHistory();
     let loaded = false;
     let user_type = null;
     const [ userdata, setUserdata ] = useState( { email: '', phone_number: '', password: '', usertype: null } );
@@ -33,6 +35,15 @@ export default () => {
     const [ success, setSuccess ] = useState( false );
     const [ errors, setErrors ] = useState( { email:[], phone_number: [], password: [], usertype: [] } );
     const [ submitBtn, setSubmitBtn ] = useState( { text: CREATE_USER_LABEL, disabled: true } );
+
+    function loginBtnClick(e) {
+        e.preventDefault();
+        if( typeof onLoginBtnClick == 'function' ) {
+            onLoginBtnClick();
+        }else {
+            history.push('/login')
+        }
+    }
 
     useEffect( function () {
         User.registration_data( 'student' )
@@ -88,11 +99,14 @@ export default () => {
                 .then( ( {data} ) => {
                     setMessage( data.message+ ' Redirecting...' );
                     setSuccess( true );
-                    Cookie.login( data.token )
+                    if( Cookie.login( data.token )) {
+                        if( typeof onLoginSuccess == 'function')
+                            return onLoginSuccess( data );
+                        setTimeout(() => {
+                            window.location.href = returnTo;
+                        }, 1000)
+                    }
                     resetErrs();
-                    setTimeout(() => {
-                        window.location.href = '/';
-                    }, 1000)
                 })
                 .catch( ({response}) => {
                     setMessage( response.data.message );
@@ -100,27 +114,35 @@ export default () => {
                         console.log( response.data.errors );
                         setErrors( response.data.errors );
                     }
+                    if( typeof onRegistrationFailed == 'function')
+                        onRegistrationFailed( response );
                 })
                 .finally( () => requesting(false))
 
         }
     }
 
+    function Title( ) {
+        if( title ) {
+            return <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">{title}</h2>
+        }
+        return <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Registration</h2>
+    }
 
-    return <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    function Logo() {
+        if( logo !== false )
+            return <img
+                className="mx-auto h-12 w-auto"
+                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow"/>
+
+        return '';
+    }
+
+    return <div className="flex items-center justify-center bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
             <div>
-                <img className="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                     alt="Workflow"/>
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                    Registration
-                </h2>
-                {/*<p className="mt-2 text-center text-sm text-gray-600">*/}
-                {/*    Or*/}
-                {/*    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">*/}
-                {/*        start your 14-day free trial*/}
-                {/*    </a>*/}
-                {/*</p>*/}
+                <Logo/>
+                <Title/>
                 { message &&
                 <p className={'text-center mt-2 text-' +msgColor()+ '-700 bg-'+msgColor()+'-200 py-2 px-1'}>
                     {message}
@@ -188,7 +210,13 @@ export default () => {
                 </div>
 
                 <div>
-                    <SubmitButton disabled={submitBtn.disabled}>{submitBtn.text}</SubmitButton>
+                    <div>
+                        <SubmitButton disabled={submitBtn.disabled}>{submitBtn.text}</SubmitButton>
+                    </div>
+                    <p className='pt-2 text-sm text-gray-600'>
+                        Already Member? <a href='javascript:void(0)' className='text-blue-400'
+                                               onClick={loginBtnClick}>Click Here to Login</a>
+                    </p>
                 </div>
             </form>
 

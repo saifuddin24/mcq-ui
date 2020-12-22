@@ -95,4 +95,18 @@ function  Alert({variant, children, className }){
      return '';
 }
 
-export {Button, InputField, FieldError, Alert};
+function Overly({show, color,colorVariant, opacity, children, z}) {
+    function getColor() {
+        return (color || 'gray') + '-' + ( colorVariant || '300');
+    }
+
+    if( !show ) return '';
+
+    return <div className={'absolute inset-0 bg-'
+            + getColor() + ' z-'+( z || '40' )+' opacity-'+( opacity || '40' )
+            +' flex items-center justify-center'}>
+        {children}
+    </div>
+}
+
+export {Button, InputField, FieldError, Alert, Overly};
