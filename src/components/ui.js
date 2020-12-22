@@ -69,30 +69,44 @@ function FieldError({errors, field}) {
 }
 
 
-function  Alert({variant, children }){
+function  Alert({variant, children, className }){
     const [ expired, setExpired ] = useState( 0 );
 
     function getVariant() {
         switch ( variant ) {
-            case 'success': return ' bg-green-300 hover:bg-green-400 text-indigo-600 hover:text-indigo-900';
-            case 'outline-success': return 'border border-green-300 hover:bg-green-300 text-indigo-600 hover:text-indigo-900';
-            case 'info': return '  bg-blue-400 hover:bg-blue-500 text-indigo-900 hover:text-indigo-900';
-            case 'outline-info': return 'border  border-blue-400 hover:bg-blue-400 text-indigo-900 hover:text-indigo-900';
-            case 'danger': return ' bg-red-600 hover:bg-red-700 text-indigo-600 hover:text-indigo-900';
-            case 'outline-danger': return 'border border-red-600 hover:bg-red-700 text-red-600 hover:text-indigo-100';
-            case 'warning': return 'bg-yellow-400 hover:bg-yellow-500 text-indigo-600 hover:text-indigo-900';
-            case 'outline-warning': return 'border border-yellow-400 hover:bg-yellow-500 text-yellow-400 hover:text-gray-100';
-            default: return ' bg-green-300 hover:bg-green-400 text-indigo-600 hover:text-indigo-900'
+            case 'success': return ' bg-green-300 text-green-700 border border-green-300';
+            case 'outline-success': return 'border border-green-300 text-green-300';
+            case 'info': return '  bg-blue-400 text-blue-900 border border-blue-900';
+            case 'outline-info': return 'border border-blue-400 text-blue-400';
+            case 'danger': return ' bg-red-600 text-red-900 border border-red-900';
+            case 'outline-danger': return 'border border-red-600 text-red-600';
+            case 'warning': return 'bg-yellow-500 text-yellow-100 border border-yellow-700';
+            case 'outline-warning': return 'border border-yellow-400 text-yellow-400';
+            default: return ' bg-green-300 text-green-700 border border-green-300'
         }
     }
 
 
      if( children ) {
-         return <p className={'text-center mt-2 '+ getVariant() + ' py-2 px-1'}>
+         return <p className={'text-center mt-2 shadow-sm '+ getVariant() + ' py-2 px-1 ' + className}>
              {children}
          </p>
      }
      return '';
 }
 
-export {Button, InputField, FieldError, Alert};
+function Overly({show, color,colorVariant, opacity, children, z}) {
+    function getColor() {
+        return (color || 'gray') + '-' + ( colorVariant || '300');
+    }
+
+    if( !show ) return '';
+
+    return <div className={'absolute inset-0 bg-'
+            + getColor() + ' z-'+( z || '40' )+' opacity-'+( opacity || '40' )
+            +' flex items-center justify-center'}>
+        {children}
+    </div>
+}
+
+export {Button, InputField, FieldError, Alert, Overly};

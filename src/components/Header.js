@@ -4,7 +4,7 @@ import React from "react";
 import Cookie from "../helpers/Cookie";
 import db, {User} from "../helpers/db";
 
-export default () => {
+export default ({isLoggedIn}) => {
 
 
 
@@ -12,7 +12,8 @@ export default () => {
 
     function UserArea() {
 
-        if( Cookie.isLoggedIn( ) ){
+        // if( Cookie.isLoggedIn( ) ){
+        if( isLoggedIn || Cookie.isLoggedIn( )){
             return  <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                     className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
