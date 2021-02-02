@@ -1,0 +1,9 @@
+<h2>{{options.title || 'Be confirm!' }}</h2>
+
+<mat-dialog-content>{{options.body || 'Are you sure?'}}</mat-dialog-content>
+
+<mat-dialog-actions style="border-top: 1px solid #ccc; padding-top: 10px; padding-bottom: 20px; margin-top: 20px; display: flex; justify-content: flex-end">
+  <button mat-stroked-button color="primary" (click)="onPosBtnClick()" >{{ options.positiveText || 'Yes' }}</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <button mat-raised-button class="mat-elevation-z0" color="warn" (click)="onNegBtnClick()" [mat-dialog-close]="options.closeOnPgText">{{options.negativeText || 'No' }}</button>
+</mat-dialog-actions>

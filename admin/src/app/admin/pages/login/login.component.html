@@ -1,0 +1,40 @@
+
+<div class="login-wrapper">
+
+  <mat-card class="box" class="mat-elevation-z5">
+    <mat-card-header style="margin-bottom: 30px">
+      <mat-card-title>Admin Log In</mat-card-title>
+
+    </mat-card-header>
+
+    <form class="example-form" (submit)="submitLoginForm($event)" [formGroup]="loginForm">
+      <mat-card-content>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="Type your username" [formControl]="controls.username" >
+<!--          <mat-hint >ok</mat-hint>-->
+          <mat-error *ngIf="controls.username.touched && controls.username.errors != null">
+            <p *ngFor="let err of controls.username.errors">{{err}}</p>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input-full-width" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Type your username" type="password" [formControl]="controls.password" >
+<!--          <mat-hint >ok</mat-hint>-->
+          <mat-error *ngIf="controls.password.touched && controls.password.errors != null">
+            <p *ngFor="let err of controls.password.errors">{{err}}</p>
+          </mat-error>
+        </mat-form-field>
+
+      </mat-card-content>
+      <p *ngIf="error" style="color: crimson;">{{error}}</p>
+      <button mat-raised-button color="primary" [disabled]="btnDisabled" class="btn-block">{{
+          btnDisabled ? 'Logging In': 'Log in'
+        }}</button>
+    </form>
+
+  </mat-card>
+
+</div>

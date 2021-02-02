@@ -1,0 +1,21 @@
+<h2 *ngIf="title"><span style="font-weight: 500">{{title}}</span></h2>
+<mat-form-field [appearance]="appearance" >
+  <mat-label>Title</mat-label>
+  <input matInput placeholder="Type a category title" [(ngModel)]="form_value.name" (keyup.enter)="performCategoryForm()">
+  <mat-error align="end">msg</mat-error>
+</mat-form-field>
+
+<mat-form-field [appearance]="appearance">
+  <mat-label>Parent</mat-label>
+  <mat-select [(ngModel)]="form_value.parent_id" >
+    <mat-option *ngFor="let opt of optionParents" [value]="opt.id">
+      <ng-container *ngIf="opt.level > 0">
+        <ng-container *ngFor='let d of app.arrFill(opt.level)'>&mdash;</ng-container>
+      </ng-container> {{opt.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div style="display: flex; margin-top: 20px">
+  <button mat-raised-button color="primary" (click)="performCategoryForm()">{{btnTitle}}</button>
+</div>

@@ -1,0 +1,123 @@
+<style>
+  :host {
+    width: 100%;
+    display: block;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  .question-opts-item {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    border: 1px solid bisque;
+    padding: 10px;
+    background-color: #fefefe;
+    border-radius: 5px ;
+    margin-bottom: 25px;
+    box-shadow: 2px 2px 0 #999;
+  }
+
+  .custom-checkbox, .close-btn {
+    margin-right: 10px;
+    border: 1px solid green;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    height: 18px;
+    width: 20px;
+    cursor: pointer;
+  }
+
+  .custom-checkbox.checked {
+    background-color: #00e0e0;
+    border-color: #00e0e0;
+    color: #FFFFFF;
+  }
+  .close-btn {
+    background-color: #ff0d00;
+    border-color: #ff0d00;
+    color: #FFFFFF;
+  }
+
+  .option-items {
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: 0.8s;
+  }
+
+  .option-item {
+    background-color: #efefef;
+    padding: 10px;
+    margin-bottom: 5px;
+  }
+
+</style>
+<fieldset class="container">
+  <legend style="margin-left: 0">Answer options</legend>
+
+  <fieldset class="question-opts-item" *ngFor="let option of question_option_set; index as opt_in">
+    <legend style="text-align: center">Answer Option Set {{opt_in+1}}</legend>
+
+    <div style="display: flex; flex-grow: 1;">
+
+      <mat-form-field appearance="legacy" color="accent" style="display: flex; flex-grow: 1; flex-direction: column; padding-right: 10px"  >
+        <mat-label>Option Tag</mat-label>
+        <input matInput placeholder="Type a question title" [(ngModel)]="option.option_tag" (keyup)="notifyChanged()" >
+        <mat-error align="end">msg</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="legacy">
+        <mat-label>Option Type</mat-label>
+        <mat-select [(ngModel)]="option.opt_type"  (selectionChange)="updateSelectedOptType( opt_in )">
+          <mat-option [value]="optType.type" *ngFor="let optType of option.option_types">{{optType.type_label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <answer-options-editor
+      (change)="notifyChanged()"
+      [(options-data)]="question_option_set[opt_in]"
+      [given-answer]="givenAanswer"
+      [option-hidden]="option.is_hidden"
+      [option-type]="option.opt_type"></answer-options-editor>
+
+
+    <div style="flex-direction: row;display: flex; flex-grow: 1;margin-top: 3px;">
+      <div *ngIf="question_option_set[opt_in].has_duplicate" style="font-size: 12px; color: #ff0d00">Duplicate option detected</div>
+      <div class="spacer"></div>
+
+      <button
+        mat-button style="padding: 5px 8px; line-height: 1; margin: 0 5px" color="primary"
+        (click)="option.is_hidden = !option.is_hidden;"
+      >{{option.is_hidden ? "Show":"Hide"}}</button>
+
+      <button
+        mat-button style="padding: 5px 8px; line-height: 1; margin: 0 5px" color="primary"
+        (click)="removeOptionSet( opt_in )" [disabled]="question_option_set.length === 1 || opt_in === 0"
+      >Remove This Set</button>
+
+      <button [disabled]="optionLimitReached( opt_in )"
+              mat-stroked-button
+              style="padding: 5px 8px; line-height: 1" (click)="addMoreOption(opt_in)"
+      >+ Add More Option</button>
+
+    </div>
+
+  </fieldset>
+
+  <div style="flex-direction: row;display: flex; flex-grow: 1;justify-content: center; margin-top: 5px; margin-bottom: 10px">
+    <button
+      mat-flat-button style="padding: 5px 8px; line-height: 1" color="accent"
+      (click)="addMoreOptionSet()"
+    >+ {{ this.question_option_set.length == 0 ? 'Add Option Set' : 'Add More Option Set' }}</button>
+  </div>
+
+</fieldset>
+

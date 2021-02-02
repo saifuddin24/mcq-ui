@@ -1,0 +1,104 @@
+<h2>Questions</h2>
+<mat-form-field appearance="legacy">
+  <mat-label>Option Type</mat-label>
+  <mat-select [(ngModel)]="opt_type_label" (selectionChange)="optChanged($event)" name="optionType" >
+    <mat-option *ngFor="let opt of answer_option_types" [value]="opt.type">{{opt.type_label}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!--<p>{{ backupItems | json }}</p>-->
+<div class="example-list assigned-question-list" cdkDropList (cdkDropListDropped)="drop($event)">
+
+  <div cdkDragBoundary=".assigned-question-list" cdkDrag cdkDragLockAxis="y" class="example-box"
+       *ngFor="let question of assignedData; index as i" >
+    <div class="question-details">
+
+      <div
+        style="width: 100%; font-weight: 600; font-size: 15px;
+        padding-bottom: 8px;
+        display: flex; align-items: flex-start;"
+      >
+        <div class="spacer">Question: {{ question.title}}</div>
+        <div class="example-handle" cdkDragHandle  matTooltip="Reposition This Question" matTooltipPosition="before" style="cursor: move; color: #cccccc">
+          <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+          </svg>
+        </div>
+        <button class="icon-btn-sm" mat-icon-button style="color: red" matTooltip="Delete This Question" matTooltipPosition="before"
+                (click)="assignedData.splice( i, 1 )"><mat-icon>delete</mat-icon></button>
+      </div>
+
+      <div
+        style="width: 100%; font-weight: 700; font-size: 15px; display: flex;
+        align-items: center; padding:0 0 16px 0;  border-bottom: 1px solid #eee;margin-bottom: 16px;"
+      >
+        Ans: <input matInput
+                    style="border: 1px solid #ccc; height: 28px; padding: 5px 10px; margin: 0 8px;
+                    width: auto; display: flex; flex-grow: 1"
+              [style.border-color]="!answerIsReadonly( i ) ? '#46e246':'transparent'"
+              [style.color]="!answerIsReadonly( i ) ? '#46e246':'#555'"
+              [readonly]="answerIsReadonly( i )"
+              placeholder="Set Answer"
+              [(ngModel)]="question.assigned_answer"
+        >
+        <button mat-stroked-button (click)="toggleAnswerStatus( i )"
+                style="padding:0 15px; font-size: 12px; line-height: 29px; height: 30px">
+          {{answerIsReadonly( i ) ? 'Edit Answer':'Cancel'}}
+        </button>
+
+      </div>
+
+      <!--<div style="font-style: italic; color: #ccc; font-size: 11px">{{ cat.names( question.category_names ) }}</div>-->
+
+    </div>
+
+    <div class="question-options">
+
+      <div
+        style="width: 100%; font-weight: 700; font-size: 15px;
+        display: flex; align-items: center; padding: 10px 0">
+        <div>Options</div>
+        <div class="spacer">
+          <div *ngIf="question.opt_data.has_duplicate"
+               style="margin-left:10px;color: #ff0d00; font-weight: normal; font-size: 12px; font-style: italic">
+            Duplicate Detected
+          </div>
+        </div>
+        <button mat-stroked-button style="padding:0 15px; font-size: 12px; line-height: 29px; height: 30px"
+                color="accent"
+                (click)="question.opt_data.is_hidden = !question.opt_data.is_hidden">
+          {{editor_hidden[i] ? 'Cancel':'Edit Options' }}
+        </button>
+      </div>
+
+      <ng-container>
+
+        <ng-container *ngIf="!editor_hidden[i]">
+          <div *ngFor="let option of question.opt_data.question_options">
+            <p>({{ option.option_label }}) {{ option.option_value }}</p>
+          </div>
+        </ng-container>
+
+        <answer-options-editor
+          (change)="setOutput()"
+          (init)="setOutput()"
+          [option-type]="opt_type_label"
+          [given-answer]="question.assigned_answer"
+          [options-data]="question.opt_data"
+          [option-hidden]="!editor_hidden[i]" >
+        </answer-options-editor>
+        <button mat-stroked-button
+                [disabled]="question.opt_data.question_options.length >= 10"
+                *ngIf="editor_hidden[i]"
+                (click)="addMoreOption(i)">+ Add More Option</button>
+
+      </ng-container>
+    </div>
+  </div>
+
+
+</div>
+<div>
+  <button mat-raised-button (click)="addNewQuestion()">+Add More Question</button>
+</div>

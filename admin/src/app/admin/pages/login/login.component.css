@@ -1,0 +1,108 @@
+::ng-deep .mat-form-field-flex  {
+  font-weight: 500;
+}
+::ng-deep .mat-form-field-flex > .mat-form-field-infix { padding: 0.4em 0px !important;}
+::ng-deep .mat-form-field-label-wrapper { top: -1.3em; }
+::ng-deep
+.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+.mat-form-field-label {
+  transform: translateY(-1.2em) scale(.75);
+  width: 133.33333%;
+}
+:host input.mat-input-element {
+  padding-bottom: 5px;
+}
+:host ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 5px;
+}
+:host ::ng-deep .mat-form-field-wrapper .mat-form-field-subscript-wrapper{
+  left: 0;
+  padding-left:0 ;
+  position: relative;
+  min-height: 15px;
+}
+
+:host ::ng-deep .mat-form-field-wrapper .mat-form-field-subscript-wrapper p{
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.login-wrapper {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0f6674;
+}
+
+.positronx {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.box {
+  position: relative;
+  top: 0;
+  opacity: 1;
+  float: left;
+  padding: 60px 50px 40px 50px;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  transform: scale(1);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  z-index: 50;
+  max-width: 330px;
+}
+
+.box.back {
+  transform: scale(.95);
+  -webkit-transform: scale(.95);
+  -ms-transform: scale(.95);
+  top: -20px;
+  opacity: .8;
+  z-index: -2;
+}
+
+.login-wrapper .example-form {
+  min-width: 100%;
+  max-width: 300px;
+  width: 100%;
+}
+
+.login-wrapper .input-full-width{
+  margin-top: 4px;
+}
+
+.login-wrapper .input-full-width,
+.login-wrapper .btn-block {
+  width: 100%;
+}
+
+.login-wrapper mat-card-header {
+  text-align: center;
+  width: 100%;
+  display: block;
+  font-weight: 700;
+}
+
+.login-wrapper mat-card-header mat-card-title {
+  font-size: 30px;
+  margin: 0;
+}
+
+.login-wrapper .mat-card {
+  padding: 40px 70px 50px;
+}
+
+.login-wrapper .mat-stroked-button {
+  border: 1px solid currentColor;
+  line-height: 54px;
+  background: #FFF7FA;
+}
+
+.login-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0.8375em 0;
+}

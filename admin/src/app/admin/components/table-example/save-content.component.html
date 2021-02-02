@@ -1,0 +1,80 @@
+<style>
+  .savedata-container {
+    display: flex;
+    flex-direction: row;
+  }
+  .savedata-container-left,
+  .savedata-container-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .savedata-container-left {
+    width: 60%;
+    padding-right: 10px;
+  }
+
+  .savedata-container-right {
+    width: 40%;
+
+  }
+
+</style>
+
+<div class="savedata-container">
+
+
+  <div class="savedata-container-left">
+
+    <h2>Add Quiz</h2>
+
+    <mat-form-field appearance="fill" style="margin-bottom: 20px">
+      <mat-label>Quiz Title</mat-label>
+      <input matInput placeholder="Type your quiz title. e.g. Mathematics and calculas">
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill" style="margin-bottom: 20px">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Type a description for quiz"></textarea>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+    <div style="display: flex; margin-bottom: 20px; flex-grow: 1; border: 1px salmon solid">
+
+      <mat-form-field appearance="fill" style="margin-right: 10px;  width: 45%">
+        <mat-label>Full Mark</mat-label>
+        <input type="number" matInput placeholder="Quiz full mark">
+        <mat-hint>Hint</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="margin-right: 10px; ; width: 25%">
+        <mat-label>Nagative Marking</mat-label>
+        <input  type="number" matInput placeholder="Nagative mark for each wrong answer">
+        <mat-hint>Hint</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 30%">
+
+        <mat-label>Nagative Marking Type</mat-label>
+
+        <mat-select>
+          <mat-option value="percent">Percent</mat-option>
+          <mat-option value="numeric">Numeric</mat-option>
+        </mat-select>
+
+        <mat-hint>Hint</mat-hint>
+
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <div class="savedata-container-right">
+    <h3>Questions</h3>
+
+  </div>
+
+</div>

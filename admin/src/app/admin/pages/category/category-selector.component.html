@@ -1,0 +1,64 @@
+<style>
+  :host { border: 1px greenyellow dashed; display: flex; width: 100%; padding: 15px; }
+
+  .cat-container, .cat-adder { display: flex; flex-direction: column; width: 60% }
+
+  .cat-container { display: flex; border-right: 1px dashed green; padding-right: 15px; flex-grow: 1}
+
+  .cat-container-list { height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px }
+
+  .cat-container-list ul{ padding: 0; margin: 0; }
+
+  .cat-adder { margin-left: 15px; display: inline-block; width:0; }
+
+  :host .cat-container-list li {
+    background-color: #f7f7f7;
+    margin-bottom: 1px;
+  }
+
+  :host .cat-container-list li:hover {
+    background-color: #f4f4f4;
+  }
+
+
+</style>
+
+<div class="cat-container" [style.borderWidth.px]="addrOpen ? 1:0" >
+<!--  {{ selected | json}}-->
+  <h3>
+    {{selectorTitle}} <a mat-stroked-button color="primary" style="padding: 0px 14px; line-height: 21px"
+                           href="javascript:void(0)" (click)="addrOpen =! addrOpen">Add New</a>
+  </h3>
+  <div class="cat-container-list">
+    <ul style="display: flex; flex-direction: column">
+      <ng-container *ngFor="let row of categoryItems">
+
+        <li *ngIf="row.id > 0" style="display:flex;flex-grow: 1">
+          <span *ngFor='let d of app.arrFill(row.level); index as i'>&nbsp;&nbsp;&nbsp;</span>
+
+          <mat-checkbox (click)="$event.stopPropagation()" color="primary"
+                        (change)="toggleSelection( $event, row )"
+                        [checked]="selection.isSelected(row)"
+                        style=" width: 100%; display: block"
+                        class="full-width"
+          >
+            {{row.name}}
+          </mat-checkbox>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>
+
+<div class="cat-adder"
+     [style.width.%]="addrOpen ? 35:0"
+     [style.opacity]="addrOpen ? 1:0"
+>
+  <h3>{{adderTitle}}</h3>
+ <category-adder
+   [btn-title]='addrBtnTitle'
+   title=""
+   [appearance]="inputAppearance"
+   style="display: flex; flex-direction: column" [(adderModel)]="adder">
+ </category-adder>
+</div>

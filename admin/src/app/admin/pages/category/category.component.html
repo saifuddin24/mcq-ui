@@ -1,0 +1,225 @@
+<style lang="scss">
+  :host {
+    width: 100%;
+    min-height: 600px;
+  }
+
+  .cat-container {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  :host .active {
+    border-bottom: #980000 solid 2px;
+  }
+
+  .cat-container-body {
+    width: 100%;
+    display: flex;
+  }
+
+  .cat-container-add {
+    padding-top: 16px;
+    padding-right: 16px;
+    width: 30%;
+    border-right: 1px solid #ccc;
+  }
+
+  .cat-container-list {
+    width: 70%;
+    padding: 16px;
+    min-height: 600px;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+
+  .data-table-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-top: -5px;
+  }
+
+</style>
+
+<div class="cat-container">
+
+  acCatType: {{activeCatType}}; selected: {{bundleIdsString}}
+
+  <div style="border-bottom: 1px solid #ccc; display: flex; flex-grow: 1">
+
+
+    <mat-nav-list style="display: flex;  flex-grow:1;padding-top: 0; justify-content: center;">
+
+      <a [ngClass]="{ 'active' : cat.catType == activeCatType }"
+         style="flex-grow: 0; width: auto"
+         mat-list-item [routerLink]="adminBase( '/subject/' + cat.catType )"
+         *ngFor="let cat of catTypes">{{cat.tabTitle}}
+      </a>
+
+    </mat-nav-list>
+
+  </div>
+
+  <div style="border-bottom: 1px solid #ccc; display: flex; flex-grow: 1">
+
+
+  <div class="cat-container-body">
+
+    <div class="cat-container-add" style="display: flex; flex-direction: column">
+
+      <category-adder [title]="'Add '+activeType?.tabTitle" style="display: flex; flex-direction: column" [(adderModel)]="cat_adder"></category-adder>
+
+
+    </div>
+
+    <div class="cat-container-list">
+
+      <div class="data-table-header" style="flex-direction: column">
+        <div class="spacer" style="width: 100%">
+          <h2><span style="font-weight: 500">{{activeType?.tabTitle}}</span> List</h2>
+          <div class="spacer"></div>
+
+          <data-search-input [(searchModel)]="categorySearch" label="Search" ></data-search-input>
+        </div>
+        <div class="spacer" style="justify-content: center; width: 100%; height: 40px" *ngIf="bundleIdsString.length > 0">
+          <button mat-stroked-button color="warn" (click)="catService.performAction('delete' )">Delete Selected</button>
+        </div>
+      </div>
+
+
+      <div class="data-container mat-elevation-z8">
+
+        <div class="data-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+          <div class="data-rate-limit-reached" *ngIf="isRateLimitReached">{{ errString || 'Connection timed out!' }}</div>
+
+        </div>
+
+        <div style="
+          font-size: 40px;
+          color: #cccccc;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          display: flex;
+          flex-grow: 1;
+          justify-content: center;
+          align-items: center;
+          z-index: 40;" *ngIf="dataIsNotFound">
+          {{ isTrashList? 'Trash Empty' : 'No Data found' }}
+        </div>
+
+        <div class="data-table-container">
+<!--          matSortActive="name" matSortDisableClear matSortDirection="asc"-->
+
+          <table mat-table [dataSource]="data" class="example-table" matSort multiTemplateDataRows>
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)=" $event ? appService.masterToggle( selection, data ) : null "
+                              [checked]="selection.hasValue() && appService.isAllSelected( selection, data )"
+                              [indeterminate]="selection.hasValue() && !appService.isAllSelected( selection, data )"
+                              color="primary">
+                </mat-checkbox>
+              </th>
+
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                             >
+                </mat-checkbox>
+              </td>
+
+            </ng-container>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td mat-cell *matCellDef="let row">{{row.id}}</td>
+            </ng-container>
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let row">
+                <ng-container *ngIf="row.level > 0">
+                  <span *ngFor='let d of appService.arrFill(row.level); index as i'>&mdash;</span>
+                </ng-container>
+                {{row.name}}
+              </td>
+            </ng-container>
+
+
+            <!-- Full Marks Column -->
+            <ng-container matColumnDef="action">
+
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">Action</th>
+              <td mat-cell *matCellDef="let row" style="text-align: center">
+
+                <ng-container *ngIf="!isTrashList">
+
+                  <button title="Edit This Item" mat-icon-button (click)="expandedEdit = expandedEdit === row ? null : row">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button title="Delete Item" mat-icon-button (click)="catService.performAction( 'delete', row )" *ngIf="!isTrashList" >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+
+                </ng-container>
+
+              </td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+
+                <div class="category-editor-container" [@detailExpand]="element == expandedEdit ? 'expanded' : 'collapsed'">
+                  <category-quick-editor
+                    style="border: 5px dashed #ccc;"
+                    [category-parents]="optionParents"
+                    [category-data]="element"
+                    [cat-type]="activeType"
+                    (cancel)="expandedEdit = null"
+                  >
+                  </category-quick-editor>
+
+
+                </div>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                class="example-element-row"
+                [class.example-expanded-row]="expandedEdit === row"
+            ></tr>
+
+
+            <tr mat-row *matRowDef="let element; columns: [ 'expandedDetail' ]" class="example-detail-item"></tr>
+
+          </table>
+        </div>
+
+<!--        <mat-paginator [length]="resultsLength" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>-->
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

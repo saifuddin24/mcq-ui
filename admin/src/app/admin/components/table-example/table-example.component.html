@@ -1,0 +1,153 @@
+<div style="padding: 0 0 15px 0; display: flex;flex-direction: column">
+  <div style="display: flex; height: 30px; align-items: center; margin-bottom: 10px; margin-top: 10px">
+    <button mat-raised-button color="accent" (click)="runAccentBtn()">Load</button>
+    <div style="display: flex; flex-grow: 1"></div>
+    <mat-form-field floatLabel="never" appearance="legacy" style="margin-right: 5px; margin-top: 15px">
+<!--      <mat-label>Search</mat-label>-->
+      <input matInput (keyup)="filterData( $event )" placeholder="Search">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+<!--    <input matInput type="text" placeholder="Ex. বাংলাদেশ""-->
+<!--           >-->
+    <button mat-stroked-button color="primary" (click)="toggleContentSaveDialog()">Add Item</button>
+  </div>
+  <div style="display: flex; flex-grow: 1;">
+    <div style="display: flex;">
+      <button mat-raised-button color="accent" (click)="toggleTrashList()">
+        {{isTrashList? 'Show main List': 'Show Trash List'}}
+      </button>
+    </div>
+
+    <div style="display: flex; flex-grow: 1"></div>
+
+    <div style="display: flex; align-items: center;">
+      {{ parseBundleIdsString }}<div style="margin-left: 5px"></div>
+      <ng-template [ngIf]="!isTrashList">
+        <button (click)="performAction( 'delete' )" [disabled]="selection.selected.length == 0" mat-stroked-button color="warn">Trash Selected</button>
+        <button (click)="performAction( 'publish' )" [disabled]="selection.selected.length == 0" mat-stroked-button color="warn">Publish Selected</button>
+      </ng-template>
+      <ng-template [ngIf]="isTrashList">
+        <button (click)="performAction( 'restore' )" [disabled]="selection.selected.length == 0" mat-stroked-button color="warn">Restore Selected</button>
+        <button (click)="performAction( 'permanent-delete' )" [disabled]="selection.selected.length == 0" mat-stroked-button color="warn">Delete Selected Permanently</button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<div class="example-container mat-elevation-z8">
+
+  <div class="example-loading-shade"
+       *ngIf="isLoadingResults || isRateLimitReached">
+
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+    <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+      {{ errString || 'Connection timed out!' }}
+    </div>
+    <div *ngIf="resultsLength === 0">
+<!--      No Data Found-->
+    </div>
+  </div>
+
+    <div style="
+      font-size: 40px;
+      color: #cccccc;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      display: flex;
+      flex-grow: 1;
+      justify-content: center;
+      align-items: center;
+      z-index: 40;" *ngIf="dataIsNotFound">
+      {{ isTrashList? 'Trash Empty' : 'No Data found'}}
+    </div>
+
+
+  <div class="example-table-container">
+
+    <table mat-table [dataSource]="data" class="example-table"
+           matSort [matSortActive]="isTrashList? 'created_at':'deleted_at'" matSortDisableClear matSortDirection="desc">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()" color="primary">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Title</th>
+        <td mat-cell *matCellDef="let row">{{row.title}}</td>
+      </ng-container>
+
+      <!-- Full Marks Column -->
+      <ng-container matColumnDef="full_marks">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Full Mark</th>
+        <td mat-cell *matCellDef="let row">{{row.full_marks}}</td>
+      </ng-container>
+
+      <!-- Full Marks Column -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Created</th>
+        <td mat-cell *matCellDef="let row">{{row.created_at}}</td>
+      </ng-container>
+
+      <!-- Full Marks Column -->
+      <ng-container matColumnDef="deleted_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Deleted at</th>
+        <td mat-cell *matCellDef="let row">{{row.deleted_at}}</td>
+      </ng-container>
+
+      <!-- Full Marks Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center">Action</th>
+        <td mat-cell *matCellDef="let row" style="text-align: center">
+
+          <button title="Edit This Item" mat-icon-button *ngIf="!isTrashList">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button title="Delete Item" mat-icon-button (click)="performAction( 'delete', row )" *ngIf="!isTrashList" >
+            <mat-icon>delete</mat-icon>
+          </button>
+
+          <button title="Restore" mat-icon-button *ngIf="isTrashList" (click)="performAction( 'restore', row )" color="primary">
+            <mat-icon>restore_from_trash</mat-icon>
+          </button>
+
+          <button title="Delete Forever" mat-icon-button *ngIf="isTrashList" (click)="performAction( 'permanent-delete', row )" color="warn">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+    </table>
+  </div>
+
+  <mat-paginator [length]="resultsLength" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
