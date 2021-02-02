@@ -1,0 +1,60 @@
+<ng-container *ngIf="authenticated">
+
+
+  <mat-toolbar
+    color="primary" [ngStyle]="{height: toolbarHeight + 'px'}"
+    style="position: fixed; left:0; top: 0;z-index: 6000;
+        padding-bottom: 0;
+        padding-top: 0; justify-items: center;
+    "
+    class="mat-elevation-z6">
+    <button
+      type="button"
+      aria-label="Toggle sidenav"
+      mat-icon-button
+      (click)="drawer.toggle()"
+    >
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+    <toolbar-content [user]="userData" style="flex-grow: 1; display: flex; align-items: center"></toolbar-content>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+
+    <mat-sidenav #drawer class="sidenav mat-elevation-z4" fixedInViewport
+                 [fixedTopGap]="(isHandset$ | async) ? 0 : toolbarHeight"
+                 [mode]="(isHandset$ | async) ? 'over' : 'side'"
+                 [opened]="(isHandset$ | async) === false"
+                 position="start"
+                 style="width: 220px;"
+    >
+      <mat-toolbar *ngIf="isHandset$ | async">Sidebar Menu</mat-toolbar>
+
+      <sidebar-contents></sidebar-contents>
+
+
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+      <div
+        style="padding: 15px;"
+        [ngStyle]=" {
+        marginTop : toolbarHeight + 'px',
+        minHeight : 'calc(100vh - ' + toolbarHeight +')'
+      }">
+
+        <h1>{{ pageTitle }}</h1>
+        <router-outlet></router-outlet>
+      </div>
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+<ng-container *ngIf="!authenticated">
+  <div style="display: flex;height: 100vh; background-color: #3d4852; align-items: center; justify-content: center">
+    <mat-spinner color="primary"></mat-spinner>
+  </div>
+
+</ng-container>

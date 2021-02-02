@@ -1,0 +1,47 @@
+<!--{{catParents | json}}-->
+<style>
+  :host {
+    border: 2px dashed #ccc; padding: 15px; margin-bottom: 15px;
+    margin-top: 15px; background-color: #f9f9f9;
+  }
+</style>
+
+<h4 style="display: flex; flex-grow: 1; justify-content: center">
+  Edit {{catType.tabTitle}} &nbsp;<strong>{{catData.name}}</strong>
+</h4>
+<p [style.color]='error? "magenta":"green"'>{{ message }}</p>
+<div style="display: flex">
+  <div class="category-editor-inputs">
+    <div class="top">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Title</mat-label>
+        <input [disabled]="busy" [(ngModel)]="cat_name" (keyup.enter)="performEdit()"
+               matInput placeholder="Type a category title" #cat_form_title >
+<!--        <mat-error align="end" *ngIf="formControls.name.invalid">{{getErrorMessage('name')}}</mat-error>-->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Parent</mat-label>
+        <mat-select [disabled]="busy" [(ngModel)]="cat_parent">
+          <mat-option *ngFor="let opt of catParents" [value]="opt.id">
+            <ng-container *ngFor='let d of arrFill(opt.level)'>&mdash;</ng-container> {{opt.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="bottom">
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea [disabled]="busy" matInput [(ngModel)]="cat_description"></textarea>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="category-editor-actions">
+    <button mat-raised-button color="accent" [disabled]="busy" (click)="performEdit()">Done</button>
+    <button mat-stroked-button color="warn" [disabled]="busy" (click)="this.cancelClicked.emit()" >Cancel</button>
+  </div>
+
+</div>

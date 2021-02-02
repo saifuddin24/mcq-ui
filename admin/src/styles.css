@@ -1,0 +1,169 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.navigation-tree span.mat-button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding-right: 5px;
+}
+
+
+
+.navigation-tree span.mat-button-wrapper span.mat-button-wrapper {
+  justify-content: center;
+}
+
+.mat-form-field-subscript-wrapper {
+  left: 0;
+  padding-left:0 ;
+}
+
+.spacer {
+  display: flex;
+  flex-grow: 1;
+}
+
+
+* {
+  box-sizing: border-box ;
+}
+
+.full-width label.mat-checkbox-layout {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  padding: 3px 8px;
+}
+
+.full-width label.mat-checkbox-layout .mat-checkbox-inner-container {
+  margin: 0;
+  display: flex;
+}
+
+.full-width label.mat-checkbox-layout .mat-checkbox-label {
+  display: flex;
+  margin-left: 5px;
+}
+
+
+app-learning .examples {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+}
+
+app-learning .examples .page-list {
+  position: fixed;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-shrink: 4;
+  flex-direction: column;
+  border-left: 2px solid gray;
+  overflow-y: auto;
+  height: 100vh;
+  padding-top: 25px;
+  width: 180px;
+}
+
+app-learning .examples .page-content {
+  flex-shrink: 5;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  position: relative;
+  margin-right: 220px;
+}
+
+app-learning .examples .page-content .page-content-item {
+  margin-top: 0;
+  margin-bottom: 35px;
+}
+
+app-learning .examples .page-content .page-content-item h2 {
+  margin-top: 0;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.data-container {
+  width: 100%;
+}
+
+/* Structure */
+.data-container {
+  position: relative;
+  min-height: 600px;
+}
+
+.data-table-container {
+  position: relative;
+  max-height: 600px;
+  overflow: auto;
+
+}
+
+table {
+  width: 100%;
+}
+
+.data-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.data-rate-limit-reached {
+  color: #980000;
+  max-width: 360px;
+  text-align: center;
+}
+
+/* Column Widths */
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
+}
+
+.mat-column-created {
+  max-width: 124px;
+}
+
+.spacer{
+  display: flex; flex-grow: 1;
+}
+
+.icon-btn-sm {
+  padding: 0;
+  width: 25px !important;
+  height: 25px !important;
+  line-height: 25px !important;
+  /*border: 1px solid green !important;*/
+}
+
+.icon-btn-sm .mat-button-wrapper {
+
+}
+
+.icon-btn-sm .mat-icon {
+  height: 21px !important;
+  width: 22px !important;
+  font-size: 21px !important;
+  line-height: 17px !important;
+}

@@ -1,0 +1,5 @@
+<mat-form-field [appearance]="appearance || 'standerd'">
+  <mat-label>{{label}}</mat-label>
+  <!--(keyup)="toggleSearch1($event)"-->
+  <input matInput [(ngModel)]="searchString" (input)="toggleSearch()" [placeholder]='placeholder'>
+</mat-form-field>

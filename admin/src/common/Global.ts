@@ -1,0 +1,12 @@
+export  class Global {
+  public static pageTitle = "d";
+
+  public static changeTitle(title){
+    this.pageTitle = title;
+  }
+
+  public static authToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI1IiwianRpIjoiNzJhOWE2NGQ0NzBhZjJhMGMzOTllZDIzNDVhZWQwOGI4NjRkMzQ4ZDJlM2ZjY2RiNWJjMmNiMWUwN2Q3MDBjYjU2ZDZkOGJkMzhkY2YyZDUiLCJpYXQiOjE1OTgxODk0NTIsIm5iZiI6MTU5ODE4OTQ1MiwiZXhwIjoxNjI5NzI1NDUyLCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.t7t0JOFIiq5Gshh0aWsIPk4s0ng7u_YDWMMT3ey5hsvAg4LatV6sTmTDmiKZReJJ_W2trTamakjnNDx_KInkk3_rHbuNtnVJGJ86G0LjD67uGqBQ-c1iUCyzGDHuxptzZJMtPCX8QJbTMxavkLD0z3DOAmcMBez5ymaNzTBT1zOtYFbjLSeiNMZVg-RqVdot64mQfpaeYQkMIyUEcwcAptkbNMtmDmzEVqpduOWCT4GtCWEOYjQZGg5RfA-4V1r0FdB-jhVF0GdCTJ0vPd_gyarNix8yJjQ9o-La72kAWQ1XtAyxFtaENp3dwlvwb2qzH-74U8X6oEPpbhvMkZhVZ27gNMQ2EtXBI1gYiov-zkFhMstowRzUoepIAlfwpXD0obnx8Eo6FY65q8_GE9CAbxsHsbFqfvFTf9fYHCoRvRAWTp7ZTyazqmkZYfj271d3QrbMD19qhEsmGtQ3qtTLs9IyU5wdUF3Hv63JAuSCYgKt5WaeJdqqN_ynLN4ehycFbbmaZGBjp-lAE-dGByzWODJVr0P53eVlXRycd7LwHGRuS0blPg2n71_etOOWuBDxCO3WjthIFUHVajik-9Ri9aMK88-zwztqP_EvJG8dKoZznRUqNAnaSbB2AKBEjgtIm6OU7doUDIzq2mfY6kJJwYeu1tXlN-JQMBF_H7JYxmU';
+  public static adminBase = '/admin';
+  public static apiVersion = 'v1';
+  public static apiBase = 'http://localhost/quiz-circle/app/api/' + Global.apiVersion + "/";
+}

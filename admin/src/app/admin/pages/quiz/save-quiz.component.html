@@ -1,0 +1,154 @@
+<style>
+  :host {
+    display: flex; flex-grow: 1;
+    flex-direction: column;
+  }
+
+  :host .header,  :host .footer { display: flex; padding: 16px 0 16px 0 }
+
+  :host .header {  border-bottom: 1px solid green; padding:0 0 5px 0; display: flex; align-items: center  }
+
+  :host .footer { border-top: 1px solid green;  padding:5px 0 50px 0; }
+
+  :host .container {
+    display: flex; flex-grow: 1;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+
+  .left, .right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left {
+    width: 50%;
+    margin-right: 8px;
+  }
+
+  .right {
+    margin-left: 8px;
+    flex-grow: 1;
+    margin-top: 5px;
+  }
+
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+</style>
+
+<div class="header">
+  <h2 style="margin: 0">Add Quiz Set {{ this.form_value.answer_options_type}}</h2>
+  <div class="spacer"></div>
+  <button mat-raised-button color="primary" (click)="runForm()" [disabled]="isBusy">Save</button>
+</div>
+<p style="margin-top: 5px; color: purple" *ngIf="message">{{message}}</p>
+<!--{{assignedQuestions | json}}-->
+
+<div class="container">
+
+  <div class="loading-shade"
+       *ngIf="isBusy">
+    <mat-spinner *ngIf="isBusy"></mat-spinner>
+    <!--      <div class="example-rate-limit-reached"></div>-->
+  </div>
+
+  <div class="left">
+
+    <mat-form-field appearance="outline"color="" >
+      <mat-label>Question Title</mat-label>
+      <input matInput
+             placeholder="Type a question title"
+             [(ngModel)]="form_value.title"
+             (keyup.enter)="runForm()"
+      >
+      <mat-error align="end">msg</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput
+                placeholder="Type answer"
+                [(ngModel)]="form_value.description"
+      ></textarea>
+      <mat-error align="end">msg</mat-error>
+    </mat-form-field>
+
+    <div style="display: flex; margin-bottom: 20px; flex-grow: 1; border: 1px salmon solid">
+
+      <mat-form-field appearance="fill" style="margin-right: 10px;  width: 45%">
+        <mat-label>Full Mark</mat-label>
+        <input type="number" [(ngModel)]="form_value.full_marks" matInput placeholder="Quiz full mark">
+        <mat-hint>Hint</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="margin-right: 10px; ; width: 25%">
+        <mat-label>Nagative Marking</mat-label>
+        <input  type="number" [(ngModel)]="form_value.negative_marks_each" matInput placeholder="Nagative mark for each wrong answer">
+        <mat-hint>Hint</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 30%">
+
+        <mat-label>Nagative Marking Type</mat-label>
+
+        <mat-select [(ngModel)]="form_value.negative_mark_type">
+          <mat-option value="percent">Percent</mat-option>
+          <mat-option value="numeric">Numeric</mat-option>
+        </mat-select>
+
+        <mat-hint>Hint</mat-hint>
+
+      </mat-form-field>
+
+    </div>
+
+    <category-selector
+      [(catModel)]="quizSubject"
+      style="display: flex; width: auto"
+      category-type="quiz-subject"
+      selector-title="Select Subject(s)"
+      adder-title="Add New Subject"
+      input-appearance="legacy"
+      addr-btn-title="Add"
+    >
+    </category-selector>
+
+    <!--    <mat-form-field appearance="appearance">-->
+    <!--      <mat-label>Parent</mat-label>-->
+    <!--      <mat-select [(ngModel)]="form_value." >-->
+    <!--        <mat-option>Percents</mat-option>-->
+    <!--        <mat-option>Marks</mat-option>-->
+    <!--      </mat-select>-->
+    <!--    </mat-form-field>-->
+
+
+
+
+  </div>
+  <div class="right">
+    <button mat-stroked-button (click)="addMoreQuestion()">+Add More Questions</button>
+    <question-assigned-list (output)="setAnswerOptions( $event )"
+                            [opt-type]="form_value.answer_options_type"
+                            [quizId]="quiz_id"
+                            (opt-change)="onOptChange($event)"
+                            [assigned-list]="assignedQuestions"></question-assigned-list>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="spacer"></div>
+  <button mat-raised-button color="primary" (click)="runForm()" [disabled]="isBusy">Save</button>
+</div>
+

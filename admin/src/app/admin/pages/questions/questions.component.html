@@ -1,0 +1,125 @@
+<style>
+  :host {
+    display: flex; flex-grow: 1;
+    flex-direction: column;
+  }
+
+  :host .header,  :host .footer { display: flex; padding: 16px 0 16px 0 }
+
+  :host .header {  border-bottom: 1px solid green; padding:0 0 5px 0; display: flex; align-items: center  }
+
+  :host .footer { border-top: 1px solid green;  padding:5px 0 50px 0; }
+
+
+  :host .container {
+    display: flex; flex-grow: 1;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+
+  .left, .right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left {
+    width: 60%;
+    margin-right: 8px;
+  }
+
+  .right {
+    margin-left: 8px;
+    flex-grow: 1;
+    margin-top: 5px;
+  }
+
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+</style>
+
+  <div class="header">
+    <h2 style="margin: 0">Add Question</h2>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="runForm()" [disabled]="isBusy">Save</button>
+  </div>
+  <p *ngIf="message" style="margin-top: 10px; color: purple">{{message}}</p>
+
+  <div class="container">
+
+    <div class="loading-shade"
+         *ngIf="isBusy">
+      <mat-spinner *ngIf="isBusy"></mat-spinner>
+<!--      <div class="example-rate-limit-reached"></div>-->
+    </div>
+
+    <div class="left">
+
+      <mat-form-field appearance="outline"color="" >
+        <mat-label>Question Title</mat-label>
+        <input matInput
+               placeholder="Type a question title"
+               [(ngModel)]="form_value.title"
+               (keyup.enter)="runForm()"
+        >
+        <mat-error align="end">msg</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput
+               placeholder="Type answer"
+               [(ngModel)]="form_value.description"
+        ></textarea>
+        <mat-error align="end">msg</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Answer</mat-label>
+        <input matInput
+               placeholder="Type answer"
+               [(ngModel)]="form_value.answer"
+               (keyup.enter)="runForm()"
+               (keyup)="onChangeAnswer( $event )"
+        >
+        <mat-error align="end">msg</mat-error>
+      </mat-form-field>
+
+      <question-opts-generator
+        [(qogModel)]="questOptGenerator"
+        [given-answer]="this.form_value.answer"
+      >
+      </question-opts-generator>
+
+
+    </div>
+    <div class="right">
+      <category-selector
+        [(catModel)]="questSubject"
+        style="display: flex; width: auto"
+        category-type="question-subject"
+        adder-title="Add Subject"
+        selector-title="Select Subject(s)"
+        input-appearance="legacy"
+        addr-btn-title="Add"
+      >
+      </category-selector>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="runForm()" [disabled]="isBusy">Save</button>
+  </div>
+

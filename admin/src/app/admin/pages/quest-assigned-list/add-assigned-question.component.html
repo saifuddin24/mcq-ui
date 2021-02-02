@@ -1,0 +1,106 @@
+<style>
+  :host {
+    display: block;
+    height: 100%;
+  }
+
+  .question-list {
+    border: 1px solid green;
+  }
+
+  .question-list mat-list-item {
+    border-bottom: 1px solid green;
+  }
+
+  .question-list.mat-list-base {
+    padding-top: 0;
+  }
+  .question-list mat-list-item:last-child {
+      border-bottom: none;
+  }
+
+</style>
+
+
+  <div style="display: flex; align-items: flex-start; margin-bottom: 10px">
+    <h2 style="margin-bottom: 0">Questions in Quiz Set {{options.optType}}</h2>
+    <div class="spacer"></div>
+    <button mat-icon-button color="warn" mat-dialog-close><mat-icon>close</mat-icon></button>
+  </div>
+
+  <mat-dialog-content style="height: 100%;overflow: scroll">
+
+    <div cdkDropListGroup style="display:flex;border: 3px solid #00e0e0; padding: 10px">
+
+      <div style="height: 100%; width: 50%; display: flex; flex-direction: column; padding-right: 5px">
+
+          <div style="display: flex; width: 100%; align-items: center; height: 40px; margin-bottom: 5px ">
+            <h3 style="margin: 0">Add Question From Question Bank</h3>
+            <div class="spacer"></div>
+            <button mat-button (click)="add_form_open = !add_form_open" >
+              {{add_form_open ? 'Show Question List':'Add New Question' }}
+            </button>
+          </div>
+
+          <assigned-quest-add-new *ngIf="add_form_open" [opt-type]="options.optType"
+                                  style="display:flex; flex-direction: column "></assigned-quest-add-new>
+
+          <div style="flex-grow: 1; border: 1px solid #0097ac; overflow-y: auto"
+               *ngIf="!add_form_open" >
+            <mat-list class="question-list main-list"
+                      [cdkDropListConnectedTo]="assignedListRef"
+                      cdkDropList
+                      (cdkDropListDropped)="questionDrop( $event )"
+                      [cdkDropListData]="questionList">
+              <mat-list-item *ngFor="let question of  questionList" cdkDrag>
+                {{question.title}}
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+      </div>
+
+      <div style="display: flex; flex-direction: column; border-left: magenta 5px dashed; height: 100%; width: 50%; padding-left: 5px;  ">
+        <div style="display: flex; width: 100%; align-items: center; height: 40px; margin-bottom: 5px ">
+          <h3 style="margin: 0">Assigned Questions</h3>
+          <div class="spacer"></div>
+
+          <mat-form-field appearance="legacy" color="primary" >
+            <mat-label>Answer Option</mat-label>
+            <mat-select [(ngModel)]="options.optType">
+              <mat-option *ngFor="let type of opt_types" [value]="type.type">{{ type.type_label}}</mat-option>
+            </mat-select>
+            <mat-error align="end">msg</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div style="flex-grow: 1;height: 100vh; border: 1px solid red; overflow-y: auto">
+
+          <mat-list class="question-list assigned-list"
+                    style="height: 100%"
+                    #assignedListRef="cdkDropList"
+                    (cdkDropListDropped)="questionDrop( $event )"
+                    cdkDropList
+                    [cdkDropListData]="assignedList">
+            <mat-list-item style="height: auto; min-height: 48px" *ngFor="let assignedQuest of  assignedList; index as in" cdkDrag>
+              <assigned-question-item
+                [data]="assignedQuest"
+                [opt-type]="activeOptType"
+                (remove)="removeAssignedQuestion( in )">
+              </assigned-question-item>
+            </mat-list-item>
+          </mat-list>
+
+        </div>
+      </div>
+
+
+    </div>
+  </mat-dialog-content>
+
+
+  // Dialog Footer
+  <mat-dialog-actions align="end" style="border-top: 1px solid #ccc">
+    <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+    <button mat-button (click)="saveOptions()">Save</button>
+  </mat-dialog-actions>

@@ -1,0 +1,53 @@
+<!--<div style="width: 100%; display: flex; justify-content: center">-->
+<!--  <button routerLink="/"-->
+<!--          mat-raised-button style="line-height: 25px; margin-left: 20px">-->
+<!--    View Site-->
+<!--  </button>-->
+<!--</div>-->
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="navigation-tree">
+  <!-- This is the tree node template for leaf nodes -->
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+    <li class="tree-node">
+
+<!--      use a disabled button to provide padding for tree leaf  -->
+<!--      <button mat-icon-button disabled></button>              -->
+
+      <a mat-button class="root-link"
+         routerLinkActive="active-nav"
+         [ngClass]="{ 'parent-link': !node.root }"
+         [routerLinkActiveOptions]="{exact: node.linkActiveExact }"
+         [routerLink]="node.navLink"
+      >{{node.navTitle}}</a>
+    </li>
+
+  </mat-tree-node>
+
+
+  <!-- This is the tree node template for expandable nodes -->
+  <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+    <li >
+      <div class="tree-node" matTreeNodeToggle mat-ripple>
+        <a  mat-button [routerLink]="node.navLink"
+            [ngClass]="{ 'parent-link': !node.root }"
+            routerLinkActive="active-nav"
+            [routerLinkActiveOptions]="{exact: node.linkActiveExact }"
+        >
+          <div class="navTitle">{{node.navTitle}}</div>
+
+          <button disableRipple class="nav-expand-icon" mat-icon-button  [attr.aria-label]="'toggle ' + node.navTitle">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_left'}}
+            </mat-icon>
+          </button>
+
+        </a>
+      </div>
+
+      <ul [class.navigation-tree-invisible]="!treeControl.isExpanded(node)">
+        <ng-container matTreeNodeOutlet></ng-container>
+      </ul>
+    </li>
+  </mat-nested-tree-node>
+
+</mat-tree>
