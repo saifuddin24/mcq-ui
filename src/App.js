@@ -1,17 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
 import {  Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import {Homepage, About, Contact, ForgotPassword, Login, Profile, QuizList, Registration, ResetPassword, Subjects, Settings} from "./pages";
+import {Homepage, About, Contact, ForgotPassword, Login, Profile, QuizList, Registration, ResetPassword, Subjects, Settings, QuizPerticipation}
+from "./pages";
 import {Header} from "./components";
 import {useState, useEffect} from "react";
 import {init} from "./helpers/dom";
 import Cookie from "./helpers/Cookie";
 
 
+
 function App() {
 
     const [ loadCounter, setLoadCounter ] = useState( false);
     const [ isLoggedIn, setIsLoggedIn ] = useState(false );
+
 
     useEffect( () => {
         init();
@@ -41,6 +44,24 @@ function App() {
                 <Route path = "/contact">
                     <PageHeader>Contact</PageHeader>
                     <PageContent><Contact/></PageContent>
+                </Route>
+
+                <Route path = "/participate/:id">
+
+                    <ParticipationPage/>
+
+                    {/*<PageHeader className='flex align-center'>*/}
+                    {/*    <div className='flex flex-grow'>*/}
+                    {/*        {JSON.stringify( pageData )}*/}
+                    {/*        {headerTitle}*/}
+                    {/*    </div>*/}
+                    {/*</PageHeader>*/}
+                    {/*<PageContent>*/}
+                    {/*    <QuizPerticipation onQuizDataLoad={( data ) => {*/}
+                    {/*        setHeaderTitle( data.title );*/}
+                    {/*        setPageConfig( 'participation', data )*/}
+                    {/*    }}/>*/}
+                    {/*</PageContent>*/}
                 </Route>
 
                 <Route path = "/quizzes">
@@ -92,6 +113,24 @@ function App() {
   );
 }
 
+
+function ParticipationPage() {
+    const [ headerTitle, setHeaderTitle ] = useState( "Loading...");
+
+    return <div className='flex align-center flex-col'>
+        <PageHeader className='flex align-center'>
+            <div className='flex flex-grow'>
+                {headerTitle}
+            </div>
+        </PageHeader>
+        <PageContent>
+        <QuizPerticipation onQuizDataLoad={( data ) => {
+            console.log( 'DATAAAAA', data );
+            setHeaderTitle( data.title );
+        }}/>
+        </PageContent>
+    </div>
+}
 
 function PageContent({children}) {
     return <main className='bg-blue-100'>

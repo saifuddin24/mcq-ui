@@ -9,5 +9,7 @@ import Registration from "./Registration";
 import ResetPassword from "./ResetPassword";
 import Subjects from "./Subjects";
 import Settings from "./Settings";
+import QuizPerticipation from "./QuizPerticipation";
 
-export { Homepage, About, Contact, ForgotPassword, Login, Profile, QuizList, Registration, ResetPassword, Subjects, Settings };
+export { Homepage, About, Contact, ForgotPassword, Login, Profile,
+    QuizList, Registration, ResetPassword, Subjects, Settings, QuizPerticipation };
