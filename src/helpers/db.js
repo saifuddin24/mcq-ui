@@ -1,7 +1,7 @@
 import Cookie from "./Cookie";
 const axios = require( 'axios');
 
-const base_url = window.API_BASE_URL || 'http://localhost/quiz-circle/app/api/v1';
+const base_url = window.API_BASE_URL || 'http://192.168.1.176:8000/api/v1';
 
 function axios_create( token ) {
     return axios.create({
@@ -22,13 +22,20 @@ export default db;
 class Quiz {
 
     static get( params ){
-        return axios_create().get( '/quiz/list', { params } );
+        return axios_create( ).get( '/quiz/list', { params } );
     }
 
     static find( id, params ){
-        return axios_create().get( '/quiz/' + id, { params } );
+        return axios_create( ).get( '/quiz/' + id, { params } );
     }
 
+    static take( data ){
+        return axios_create( ).post( '/quiz/take', data );
+    }
+
+    static give_answer( id, data ){
+        return axios_create( ).post( 'quiz/' + id + '/answer', data );
+    }
 
 }
 

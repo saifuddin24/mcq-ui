@@ -4,11 +4,10 @@ import {Button, Overly} from "../components/ui";
 import Modal from "../components/modal";
 import { ForgotPassword, Login, Registration, ResetPassword } from "./index";
 import Cookie from "../helpers/Cookie";
-
+import { useHistory } from "react-router-dom";
 
 export default ({reload, onLoginSuccess}) => {
     const [showModal, setShowModal] = useState(false);
-
     const [items, setItems ] = useState([]);
     const [currentPage, setCurrentPage ] = useState(1);
     const [perPage, setPerPage ] = useState(0 );
@@ -39,7 +38,7 @@ export default ({reload, onLoginSuccess}) => {
                 setOverly({msg: '', show: false})
                 //reload = false;
             }).catch(({response}) => {
-                setOverly({msg: response.data.message, show: false});
+                setOverly({msg: response?.data.message, show: false});
             }).finally(() => {
                 //reload = false;
                 setLoading( false );
@@ -274,7 +273,7 @@ function QuizDetailsModal( { onCloseClick, data, onLoggedIn } ) {
                 </p>
             }
 
-            <QuizBodySection onLoggedIn={onLoggedIn}/>
+            <QuizBodySection quizId={data.quizID} onLoggedIn={onLoggedIn}/>
         </div>
         {/*footer*/}
         <div
@@ -287,15 +286,15 @@ function QuizDetailsModal( { onCloseClick, data, onLoggedIn } ) {
 }
 
 
-function QuizBodySection({onLoggedIn}) {
+function QuizBodySection({onLoggedIn, quizId}) {
     const [ section, setSection ] = useState( startSECTION );
     const [ token, setToken ] = useState( null );
+    const history = useHistory();
 
     function onStartClick() {
         console.log('RR: DATA', Cookie.getToken() );
         User.get( token )
             .then(({data}) => {
-                console.log( data );
                 startQuiz();
             })
             .catch( ({response}) => {
@@ -307,7 +306,12 @@ function QuizBodySection({onLoggedIn}) {
 
     function startQuiz() {
         console.log( '_______________This is ok______________' );
+
         setSection('ready');
+
+        setTimeout( () => {
+            history.push( '/participate/' + quizId );
+        }, 2000)
     }
 
     function onLoginSuccess( data ) {
@@ -349,7 +353,7 @@ function QuizBodySection({onLoggedIn}) {
             <Button variant='info' size='xl' onClick={onStartClick}>Start</Button>
         </div>
         }
-        { section == 'ready' && <p>Ready to start...</p> }
+        { section == 'ready' && <h2 className='mt-5 text-3xl text-red-500'>Exam is starting...</h2> }
     </div>
 }
 
@@ -408,18 +412,6 @@ function Pagination({  onPrevClick, onNextClick, onPageChange, totalRows, perPag
                               clip-rule="evenodd"/>
                     </svg>
                 </a>
-                {/*<a href="#"*/}
-                {/*   className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">*/}
-                {/*    1*/}
-                {/*</a>*/}
-                {/*<span*/}
-                {/*    className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">*/}
-                {/*  ...*/}
-                {/*</span>*/}
-                {/*<a href="#"*/}
-                {/*   className="hidden md:inline-flex relative items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">*/}
-                {/*    8*/}
-                {/*</a>*/}
 
                 <a href="#"
                    onClick={(e) => {
