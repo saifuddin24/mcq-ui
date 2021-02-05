@@ -37,6 +37,10 @@ class Quiz {
         return axios_create( ).post( 'quiz/' + id + '/answer', data );
     }
 
+    static result( participation_id, params ) {
+        return axios_create().get( 'quiz/take/' + participation_id + '/result', { params } );
+    }
+
 }
 
 class User {

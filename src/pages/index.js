@@ -10,6 +10,7 @@ import ResetPassword from "./ResetPassword";
 import Subjects from "./Subjects";
 import Settings from "./Settings";
 import QuizPerticipation from "./QuizPerticipation";
+import Result from "./Result";
 
 export { Homepage, About, Contact, ForgotPassword, Login, Profile,
-    QuizList, Registration, ResetPassword, Subjects, Settings, QuizPerticipation };
+    QuizList, Registration, ResetPassword, Subjects, Settings, QuizPerticipation, Result };
