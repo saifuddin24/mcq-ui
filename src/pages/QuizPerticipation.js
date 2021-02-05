@@ -1,7 +1,7 @@
 import {Quiz} from '../helpers/db';
 import {useEffect, useState} from "react";
 import {Button, Overly} from "../components/ui";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 export default ({reload, onQuizDataLoad}) => {
     const [ showModal, setShowModal] = useState(false);
@@ -12,7 +12,9 @@ export default ({reload, onQuizDataLoad}) => {
     const [ params, setParams ] = useState({page_size:4, page:1} );
     const [ loading, setLoading ] = useState( !reload );
     const [ overly, setOverly ] = useState({msg: '', show: true} );
+    const [ answerPosition, setAnswerPosition ] = useState( -1 );
     let { id } = useParams( );
+    const history = useHistory();
 
     useEffect( () => {
 
@@ -50,15 +52,35 @@ export default ({reload, onQuizDataLoad}) => {
 
         console.log( currentQuestion );
 
-        setOverly({ msg: 'Submitting...' + data.id + ' ' + currentQuestion.question_id, show: true });
+        setOverly({ msg: 'Submitting...', show: true });
 
-        Quiz.give_answer( id, { answer: 3, participation_id: data.id, question_id: currentQuestion.question_id } )
+        const participation_id = data.id;
+
+        Quiz.give_answer( id, {
+            answer : answerPosition,
+            participation_id : data.id,
+            question_id : currentQuestion.question_id,
+            remaining : remainingQuestions
+        })
         .then( ({data}) => {
             console.log( "ROOOOOP-answer", data);
 
             //setQuestions( data.questions || [] );
 
-            //updateQuestionStatus( data.questions );
+            if( data.action = 'answer_given' ) {
+                setAnswerPosition( -1 );
+                questions.splice(0, 1 );
+                updateQuestionStatus( questions );
+
+                console.log( questions, questions.length )
+
+                if( questions.length == 0 ) {
+                    setOverly({ msg: 'Completed', show: true });
+                    setTimeout(() => {
+                        history.push( '/result/' + participation_id );
+                    }, 1500)
+                }
+            }
 
             setOverly({msg: '', show: false} );
 
@@ -93,9 +115,19 @@ export default ({reload, onQuizDataLoad}) => {
         )
     }
 
-    function AnswerOptionControl( { option } ) {
+    function changeAnswer(e) {
+        setAnswerPosition( e.target.value );
+    }
+
+    function AnswerOptionControl( { option, position } ) {
         return (
-            <div>({ option.opt })</div>
+            <div className={'relative p-2 mr-2 border border-blue-900 cursor-pointer ' + (answerPosition==position? 'bg-green-800 text-white':'')}>
+                <label className='block' style={{height: '100%', width: '100%'}}>
+                    <input type='radio' name='answer' checked={answerPosition==position}
+                           value={position} onChange={(e) => {changeAnswer(e)} } />
+                    ({ option.opt })
+                </label>
+            </div>
         )
     }
 
@@ -112,7 +144,7 @@ export default ({reload, onQuizDataLoad}) => {
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="shadow py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                    <div className="relative overflow-hidden border-b border-gray-200 md:rounded-lg sm:rounded-b-none sm">
+                    <div className="pb-3 relative overflow-hidden border-b border-gray-200 md:rounded-lg sm:rounded-b-none sm">
                         <Overly show={overly.show}>
                             { overly.msg || 'Loading...' }
                         </Overly>
@@ -124,18 +156,18 @@ export default ({reload, onQuizDataLoad}) => {
                                     currentQuestion.answer_options.map( ( opt, i ) =>
                                         <AnswerOption option={opt} key={i}></AnswerOption> )}
                             </div>
-                            <div className='flex'>
+                            <div className='flex my-2'>
                                 { currentQuestion.answer_options &&
                                     currentQuestion.answer_options.map( ( opt, i ) =>
-                                        <AnswerOptionControl option={opt} key={i}></AnswerOptionControl> )}
+                                        <AnswerOptionControl option={opt} key={i} position={i}></AnswerOptionControl> )}
                             </div>
                         </div>
 
-                        <div>
-                            <Button onClick={ ( e ) => { e.preventDefault(); submitAnswer( ) }}>Next</Button>
+                        <div className='flex justify-center'>
+                            <Button size='xl' disabled={overly.show} onClick={ ( e ) => { e.preventDefault(); submitAnswer( ) }}>Next</Button>
                         </div>
 
-                        <p>Ok...{JSON.stringify( currentQuestion )}</p>
+                        {/*<p>Ok...{JSON.stringify( currentQuestion )}</p>*/}
                     </div>
 
 

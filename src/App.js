@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import {  Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import {Homepage, About, Contact, ForgotPassword, Login, Profile, QuizList, Registration, ResetPassword, Subjects, Settings, QuizPerticipation}
+import {Homepage, About, Contact, ForgotPassword, Login, Profile, QuizList, Registration,
+    ResetPassword, Subjects, Settings, QuizPerticipation, Result}
 from "./pages";
 import {Header} from "./components";
 import {useState, useEffect} from "react";
@@ -82,6 +83,12 @@ function App() {
                     <PageHeader>Subjects</PageHeader>
                     <PageContent><Subjects/></PageContent>
                 </Route>
+
+                <Route path = "/result/:participation_id">
+                    <PageHeader>Quiz Result</PageHeader>
+                    <PageContent><Result/></PageContent>
+                </Route>
+
                 <Route path = "/Settings">
                     <PageHeader>Settings</PageHeader>
                     <PageContent><Settings/></PageContent>
