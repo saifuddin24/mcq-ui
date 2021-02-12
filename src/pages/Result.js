@@ -77,9 +77,9 @@ export default ({ reload }) => {
     let negative_marks_each = Number( data.negative_marks_each );
 
     if( data.negative_mark_type == 'percent' ) {
-        negative_marking = mark_each - ( mark_each * ( negative_marks_each/100 ) );
+        negative_marking = ( mark_each * ( negative_marks_each/100 ) );
     }else if( negative_marks_each ) {
-        negative_marking = mark_each -  negative_marks_each;
+        negative_marking = negative_marks_each;
     }
 
     return <div>
