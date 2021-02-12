@@ -58,6 +58,13 @@
     margin-bottom: 5px;
   }
 
+  @media (max-width: 500px) {
+    .opt-header {
+      flex-direction: column !important;
+    }
+  }
+
+
 </style>
 <fieldset class="container">
   <legend style="margin-left: 0">Answer options</legend>
@@ -65,7 +72,7 @@
   <fieldset class="question-opts-item" *ngFor="let option of question_option_set; index as opt_in">
     <legend style="text-align: center">Answer Option Set {{opt_in+1}}</legend>
 
-    <div style="display: flex; flex-grow: 1;">
+    <div class="opt-header" style="display: flex; flex-grow: 1;">
 
       <mat-form-field appearance="legacy" color="accent" style="display: flex; flex-grow: 1; flex-direction: column; padding-right: 10px"  >
         <mat-label>Option Tag</mat-label>

@@ -46,6 +46,51 @@
     justify-content: center;
   }
 
+  .mark-input {
+    display: flex;
+    display: flex;
+    margin-bottom: 20px;
+    flex-grow: 1; border: 1px #ddd solid;
+  }
+
+  .mark-input .mark {
+    margin-right: 10px;  width: 45%
+  }
+
+  .mark-input .ng-mark {
+    margin-right: 10px; ; width: 25%
+  }
+
+  .mark-input .ng-mark-type {
+    width: 30%;
+  }
+
+
+  @media (max-width: 700px) {
+    :host .container {
+        display: flex; flex-grow: 1;
+        flex-direction: column;
+    }
+
+    .left {
+      width: 100%;
+      margin-right: 0;
+    }
+
+    .mark-input {
+      flex-direction: column;
+    }
+
+    .mark-input .mark ,
+    .mark-input .ng-mark ,
+    .mark-input .ng-mark-type {
+      width: 100%;
+      margin-right: 0;
+    }
+
+
+  }
+
 </style>
 
 <div class="header">
@@ -85,21 +130,21 @@
       <mat-error align="end">msg</mat-error>
     </mat-form-field>
 
-    <div style="display: flex; margin-bottom: 20px; flex-grow: 1; border: 1px salmon solid">
+    <div class="mark-input">
 
-      <mat-form-field appearance="fill" style="margin-right: 10px;  width: 45%">
+      <mat-form-field appearance="fill" class="mark">
         <mat-label>Full Mark</mat-label>
         <input type="number" [(ngModel)]="form_value.full_marks" matInput placeholder="Quiz full mark">
         <mat-hint>Hint</mat-hint>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="margin-right: 10px; ; width: 25%">
+      <mat-form-field appearance="fill" class="ng-mark">
         <mat-label>Nagative Marking</mat-label>
         <input  type="number" [(ngModel)]="form_value.negative_marks_each" matInput placeholder="Nagative mark for each wrong answer">
         <mat-hint>Hint</mat-hint>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" style="width: 30%">
+      <mat-form-field appearance="fill" class="ng-mark-type">
 
         <mat-label>Nagative Marking Type</mat-label>
 

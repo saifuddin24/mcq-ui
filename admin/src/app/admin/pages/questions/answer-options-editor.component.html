@@ -15,6 +15,15 @@
     background-color: #efefef;
     padding: 10px;
     margin-bottom: 5px;
+    display: flex;
+  }
+
+
+  @media (max-width: 500px) {
+    .option-item {
+      flex-direction: column;
+    }
+
   }
 
 </style>
@@ -24,34 +33,41 @@
 
   <ng-container *ngFor="let quest_option of question_options;  index as q_opt_in" >
 
-    <div cdkDragBoundary=".option-items" cdkDrag cdkDragLockAxis="y" [style.background-color]="quest_option.isRightAnswer && !has_duplicate ? '#c0faa3' : '#efefef' "
+    <div
+         cdkDragBoundary=".option-items" cdkDrag cdkDragLockAxis="y"
+         [style.background-color]="quest_option.isRightAnswer && !has_duplicate ? '#c0faa3' : '#efefef' "
          class="spacer option-item" style="align-items: center;">
 
-      <div style="padding-right: 10px;">({{option_type_labels[q_opt_in]}})</div>
+      <div  style="display:flex; flex-grow: 1; width: 100%; align-items: center">
+        <div style="padding-right: 10px;">({{option_type_labels[q_opt_in]}})</div>
 
-      <mat-form-field appearance="legacy" color="accent" style="display: flex; flex-grow: 1; flex-direction: column; padding-right: 10px" >
-        <mat-label>Option {{q_opt_in+1}}</mat-label>
-        <input matInput placeholder="Type Option 1" [(ngModel)]="quest_option.option_value" (keyup)="onOptInputChange( q_opt_in )">
-      </mat-form-field>
-      <mat-checkbox labelPosition="before"
-                    color="primary"
-                    style="margin-right: 10px"
-                    (change)="makeRightAnswer( $event, quest_option )"
-                    [disabled]="has_duplicate || quest_option.option_value.trim().length === 0"
-                    [checked]="quest_option.isRightAnswer && !has_duplicate"
-      >Make Right Answer</mat-checkbox>
-
-      <div class="example-handle" cdkDragHandle  matTooltip="Reposition This Option"
-           matTooltipPosition="before" style="cursor: move; margin-top: 6px; margin-right: 8px">
-        <svg width="24px" fill="#AAA" viewBox="0 0 24 24">
-          <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-          <path d="M0 0h24v24H0z" fill="none"></path>
-        </svg>
+        <mat-form-field appearance="legacy" color="accent" style="display: flex; flex-grow: 1; flex-direction: column; padding-right: 10px" >
+          <mat-label>Option {{q_opt_in+1}}</mat-label>
+          <input matInput placeholder="Type Option 1" [(ngModel)]="quest_option.option_value" (keyup)="onOptInputChange( q_opt_in )">
+        </mat-form-field>
       </div>
 
-      <mat-icon style="margin-right: 0" class="close-btn" mat-ripple
-                (click)="removeQuestionOption( q_opt_in)"
-      >close</mat-icon>
+      <div style="display: flex">
+        <mat-checkbox labelPosition="before"
+                      color="primary"
+                      style="margin-right: 10px"
+                      (change)="makeRightAnswer( $event, quest_option )"
+                      [disabled]="has_duplicate || quest_option.option_value.trim().length === 0"
+                      [checked]="quest_option.isRightAnswer && !has_duplicate"
+        >Make Right Answer</mat-checkbox>
+
+        <div class="example-handle" cdkDragHandle  matTooltip="Reposition This Option"
+             matTooltipPosition="before" style="cursor: move; margin-top: 6px; margin-right: 8px">
+          <svg width="24px" fill="#AAA" viewBox="0 0 24 24">
+            <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+          </svg>
+        </div>
+
+        <mat-icon style="margin-right: 0" class="close-btn" mat-ripple
+                  (click)="removeQuestionOption( q_opt_in)"
+        >close</mat-icon>
+      </div>
 
     </div>
   </ng-container>
